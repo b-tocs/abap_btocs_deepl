@@ -1,38 +1,43 @@
-INTERFACE zif_btocs_deepl_connector
-  PUBLIC .
-
-  INTERFACES zif_btocs_rws_connector .
-  INTERFACES zif_btocs_util_base .
-
-  ALIASES destroy
-    FOR zif_btocs_rws_connector~destroy .
-  ALIASES execute
-    FOR zif_btocs_rws_connector~execute .
-  ALIASES get_client
-    FOR zif_btocs_rws_connector~get_client .
-  ALIASES get_logger
-    FOR zif_btocs_rws_connector~get_logger .
-  ALIASES is_initialized
-    FOR zif_btocs_rws_connector~is_initialized .
-  ALIASES is_logger_external
-    FOR zif_btocs_rws_connector~is_logger_external .
-  ALIASES new_request
-    FOR zif_btocs_rws_connector~new_request .
-  ALIASES new_response
-    FOR zif_btocs_rws_connector~new_response .
-  ALIASES set_endpoint
-    FOR zif_btocs_rws_connector~set_endpoint .
-  ALIASES set_logger
-    FOR zif_btocs_rws_connector~set_logger .
+interface ZIF_BTOCS_DEEPL_CONNECTOR
+  public .
 
 
-  METHODS api_translate
-    IMPORTING
-      !is_params         TYPE zbtocs_deepl_s_translate_par
-      !iv_parse          TYPE abap_bool
-    EXPORTING
-      !es_result         TYPE zbtocs_deepl_s_translate_par
-    RETURNING
-      VALUE(ro_response) TYPE REF TO zif_btocs_rws_response .
+  interfaces ZIF_BTOCS_RWS_CONNECTOR .
+  interfaces ZIF_BTOCS_UTIL_BASE .
 
-ENDINTERFACE.
+  aliases DESTROY
+    for ZIF_BTOCS_RWS_CONNECTOR~DESTROY .
+  aliases EXECUTE
+    for ZIF_BTOCS_RWS_CONNECTOR~EXECUTE .
+  aliases GET_CLIENT
+    for ZIF_BTOCS_RWS_CONNECTOR~GET_CLIENT .
+  aliases GET_LOGGER
+    for ZIF_BTOCS_RWS_CONNECTOR~GET_LOGGER .
+  aliases IS_INITIALIZED
+    for ZIF_BTOCS_RWS_CONNECTOR~IS_INITIALIZED .
+  aliases IS_LOGGER_EXTERNAL
+    for ZIF_BTOCS_RWS_CONNECTOR~IS_LOGGER_EXTERNAL .
+  aliases NEW_REQUEST
+    for ZIF_BTOCS_RWS_CONNECTOR~NEW_REQUEST .
+  aliases NEW_RESPONSE
+    for ZIF_BTOCS_RWS_CONNECTOR~NEW_RESPONSE .
+  aliases SET_ENDPOINT
+    for ZIF_BTOCS_RWS_CONNECTOR~SET_ENDPOINT .
+  aliases SET_LOGGER
+    for ZIF_BTOCS_RWS_CONNECTOR~SET_LOGGER .
+
+  methods API_TRANSLATE
+    importing
+      !IS_PARAMS type ZBTOCS_DEEPL_S_TRANSLATE_PAR
+      !IV_PARSE type ABAP_BOOL
+    exporting
+      !ES_RESULT type ZBTOCS_DEEPL_S_TRANSLATE_PAR
+    returning
+      value(RO_RESPONSE) type ref to ZIF_BTOCS_RWS_RESPONSE .
+  methods PARSE_TRANSLATE
+    importing
+      !IO_RESPONSE type ref to ZIF_BTOCS_RWS_RESPONSE
+      !IV_SEPARATOR type STRING optional
+    returning
+      value(RS_RESULT) type ZBTOCS_DEEPL_S_TRANSLATE_RES .
+endinterface.

@@ -18,8 +18,9 @@ INTERFACE zif_btocs_deepl_c
 * ============== json keys
   CONSTANTS:
     BEGIN OF c_json_key,
-      translated_text     TYPE string VALUE 'translatedText',
-      translated_file_url TYPE string VALUE 'translatedFileUrl',
+      translations             TYPE string VALUE 'translations',
+      detected_source_language TYPE string VALUE 'detected_source_language',
+      text                     TYPE string VALUE 'text',
     END OF c_json_key .
 
 

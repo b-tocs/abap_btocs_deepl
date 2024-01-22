@@ -10,6 +10,20 @@
     <STATE>1</STATE>
     <UNICODE>X</UNICODE>
    </VSEOINTERF>
+   <DESCRIPTIONS_SUB>
+    <SEOSUBCOTX>
+     <CMPNAME>PARSE_TRANSLATE</CMPNAME>
+     <SCONAME>IO_RESPONSE</SCONAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>B-Tocs Response Interface</DESCRIPT>
+    </SEOSUBCOTX>
+    <SEOSUBCOTX>
+     <CMPNAME>PARSE_TRANSLATE</CMPNAME>
+     <SCONAME>RS_RESULT</SCONAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>api results for /translate</DESCRIPT>
+    </SEOSUBCOTX>
+   </DESCRIPTIONS_SUB>
   </asx:values>
  </asx:abap>
 </abapGit>

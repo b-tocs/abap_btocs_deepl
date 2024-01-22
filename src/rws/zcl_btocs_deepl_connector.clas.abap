@@ -45,6 +45,12 @@ CLASS ZCL_BTOCS_DEEPL_CONNECTOR IMPLEMENTATION.
       RETURN.
     ENDIF.
 
+    IF ls_params-text IS NOT INITIAL
+      AND ls_params-text_tab[] IS NOT INITIAL.
+      ro_response->set_reason( |only one option is available text or text table| ).
+      RETURN.
+    ENDIF.
+
     IF ls_params-target IS INITIAL.
       ro_response->set_reason( |target language is missing| ).
       RETURN.
@@ -53,6 +59,19 @@ CLASS ZCL_BTOCS_DEEPL_CONNECTOR IMPLEMENTATION.
     IF ls_params-source IS INITIAL.
       ls_params-source = 'auto'.
       get_logger( )->warning( |source language is missing. try auto detect mode| ).
+    ENDIF.
+
+* =========== prepare text
+    DATA(lv_sep) = ||.
+    IF ls_params-text IS NOT INITIAL.
+      DATA(lr_util_text) = zcl_btocs_factory=>create_text_util( ).
+      lv_sep = lr_util_text->detect_line_separator( ls_params-text ).
+      IF lv_sep IS INITIAL.
+        APPEND ls_params-text TO ls_params-text_tab.
+      ELSE.
+        SPLIT ls_params-text AT lv_sep
+          INTO TABLE ls_params-text_tab.
+      ENDIF.
     ENDIF.
 
 
@@ -84,10 +103,12 @@ CLASS ZCL_BTOCS_DEEPL_CONNECTOR IMPLEMENTATION.
       iv_value = ls_params-target
     ).
 
-    lo_request->add_form_field(
-      iv_name = 'text'
-      iv_value = ls_params-text
-    ).
+    LOOP AT ls_params-text_tab ASSIGNING FIELD-SYMBOL(<lv_text>).
+      lo_request->add_form_field(
+        iv_name = 'text'
+        iv_value = <lv_text>
+      ).
+    ENDLOOP.
 
 * ============ execute via api path
     DATA(lo_response) = zif_btocs_deepl_connector~new_response( ).
@@ -97,15 +118,25 @@ CLASS ZCL_BTOCS_DEEPL_CONNECTOR IMPLEMENTATION.
     ).
 
 * ----- parse?
-*    IF ro_response IS NOT INITIAL
-*      AND ro_response->is_json_object( ) EQ abap_true
-*      AND iv_parse EQ abap_true.
-*      DATA(lo_parsed) = ro_response->get_values_from_parsed_json( ).
-*      DATA(lo_answer)   = lo_parsed->get_structure_value( ).
-*      IF lo_answer IS NOT INITIAL.
-*        ev_translated_text = lo_answer->get_string( zif_btocs_c=>c_json_key-translated_text ).
-*      ENDIF.
-*    ENDIF.
+    IF ro_response IS NOT INITIAL
+      AND ro_response->is_json_object( ) EQ abap_true
+      AND iv_parse EQ abap_true.
+      es_result = zif_btocs_deepl_connector~parse_translate(
+        io_response  = ro_response
+        iv_separator = lv_sep ).
+    ENDIF.
+
+  ENDMETHOD.
+
+
+  METHOD zif_btocs_deepl_connector~parse_translate.
+    DATA(lo_parsed) = io_response->get_values_from_parsed_json( ).
+    DATA(lo_answer)   = lo_parsed->get_structure_value( ).
+    IF lo_answer IS NOT INITIAL
+      and lo_answer->is_object( ) eq abap_true.
+      data(lo_tranlations) = lo_answer->get( ZIF_BTOCS_DEEPL_C=>c_json_key-translations ).
+
+    ENDIF.
 
   ENDMETHOD.
 ENDCLASS.
