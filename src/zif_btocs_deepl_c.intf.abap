@@ -15,4 +15,12 @@ INTERFACE zif_btocs_deepl_c
       translate TYPE string VALUE '/v2/translate',
     END OF api_path .
 
+* ============== json keys
+  CONSTANTS:
+    BEGIN OF c_json_key,
+      translated_text     TYPE string VALUE 'translatedText',
+      translated_file_url TYPE string VALUE 'translatedFileUrl',
+    END OF c_json_key .
+
+
 ENDINTERFACE.
