@@ -25,31 +25,12 @@ flowchart LR
     end
 
     subgraph cloud-native-world["Cloud Native World"]
-        subgraph onpremise["Data Center On-Prem"]
-            service1
-        end
-        subgraph datacenter["Data Center"]
-            service2
-        end
-        subgraph hyperscaler["HyperScaler"]
-            service3
-        end
-        subgraph sapbtp["SAP BTP"]
-            service4
-        end
-        subgraph saas["SaaS"]
-            service5
+        subgraph saas["DeepL"]
+            deepl_api["DeepL API"]
         end
     end
 
-
-
-    plugin-->service1    
-    plugin-->service2    
-    plugin-->service3    
-    plugin-->service4    
-    plugin-->service5    
-
+    plugin-->deepl_api    
 ```
 
 ## Screenshots
