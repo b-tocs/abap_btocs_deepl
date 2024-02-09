@@ -58,8 +58,8 @@ START-OF-SELECTION.
           source        = p_src
           target        = p_trg
           api_key       = p_key
-      )
-      iv_parse = abap_true
+        )
+        iv_parse = abap_true
       IMPORTING
         es_result = ls_result
     ).

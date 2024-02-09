@@ -130,13 +130,37 @@ CLASS ZCL_BTOCS_DEEPL_CONNECTOR IMPLEMENTATION.
 
 
   METHOD zif_btocs_deepl_connector~parse_translate.
-    DATA(lo_parsed) = io_response->get_values_from_parsed_json( ).
-    DATA(lo_answer)   = lo_parsed->get_structure_value( ).
-    IF lo_answer IS NOT INITIAL
-      and lo_answer->is_object( ) eq abap_true.
-      data(lo_tranlations) = lo_answer->get( ZIF_BTOCS_DEEPL_C=>c_json_key-translations ).
-
-    ENDIF.
-
+    TRY.
+* --- get result and check for right format
+        DATA(lo_parsed) = io_response->get_values_from_parsed_json( ).
+        DATA(lo_answer)   = lo_parsed->get_structure_value( ).
+        IF lo_answer IS NOT INITIAL.
+          DATA(lo_translations) = lo_answer->get( zif_btocs_deepl_c=>c_json_key-translations ).
+          IF lo_translations IS NOT INITIAL.
+* --- get the array for translations
+            DATA(lo_array) = lo_translations->get_array_value( ).
+            DATA(lv_count) = lo_array->count( ).
+* --- loop all array items and get details from structure object
+            DO lv_count TIMES.
+              DATA(lv_index) = sy-index.
+              DATA(lo_entry)    = lo_array->get( lv_index ).
+              DATA(lo_line)     = lo_entry->get_structure_value( ).
+              DATA(lv_det_lang) = lo_line->get( zif_btocs_deepl_c=>c_json_key-detected_source_language )->get_string( ).
+              DATA(lv_text)     = lo_line->get( zif_btocs_deepl_c=>c_json_key-text )->get_string( ).
+* --- prepare answer
+              APPEND lv_text TO rs_result-text_tab.
+              IF rs_result-text IS INITIAL.
+                rs_result-text = lv_text.
+              ELSE.
+                rs_result-text = |{ rs_result-text }{ iv_separator }{ lv_text }|.
+              ENDIF.
+              rs_result-detected_language = lv_det_lang.
+            ENDDO.
+          ENDIF.
+        ENDIF.
+      CATCH cx_root INTO DATA(lx_exc).
+        DATA(lv_error) = lx_exc->get_text( ).
+        get_logger( )->error( lv_error ).
+    ENDTRY.
   ENDMETHOD.
 ENDCLASS.
