@@ -1,4 +1,4 @@
-# B-Tocs ABAP Addon Plugin - DeepL Connector
+# B-Tocs ABAP Plugin - DeepL Connector
 
 ![Bride To Other Cool Stuff](res/btocs_logo.gif)
 
